@@ -17,5 +17,5 @@
 ```
 -->
 ```html
- <pt-select options='[{"value":1,"label":"Option 1"},{"value":2∫,"label":"Option 2"},{"value":3,"label":"Option 3"}]' value="{{selectedValue}}" placeholder="Select One" path-to-value="value" path-to-label="label"></pt-select>
+ <pt-select options='[{"value":1,"label":"Option 1"},{"value":2,"label":"Option 2"},{"value":3,"label":"Option 3"}]' value="{{selectedValue}}" placeholder="Select One" path-to-value="value" path-to-label="label"></pt-select>
 ```
