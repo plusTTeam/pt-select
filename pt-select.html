@@ -9,10 +9,8 @@
   <template>
     <style>
      :host {
-      margin: 12px;
       padding: 4px;
       min-width: 80px;
-      overflow: hidden;
     }
 
     select {
@@ -25,7 +23,12 @@
       font-size: 16px;
       text-transform: capitalize;
       cursor: pointer;
+			@apply(--pt-select-style);
     }
+
+		label{
+			display: block;
+		}
 
     :host([value='']) select {
       color: var(--pt-primary-text-color,#000);
@@ -39,8 +42,8 @@
       outline: none;
     }
     </style>
-    
-    <select value="[[value]]" on-change="_valueSelected">
+    <label for="select">[[label]]</label>
+    <select value="[[value]]" on-change="_valueSelected" name="[[name]]">
 			<template is="dom-repeat" items="[[_mapItems(options, pathToValue, pathToLabel)]]">
 				<option value="[[item.uid]]">[[item.name]]</option>
       </template>
@@ -63,6 +66,8 @@
       static get properties(){
 		  return {
 			options: Array,
+			label:String,
+			name:String,
 			value: {
 			  type: String,
 			  notify: true,
