@@ -1,4 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html">
+<link rel="import" href="../iron-validatable-behavior/iron-validatable-behavior.html">
 
 <!--
 `<pt-select>` is a single select field.
@@ -6,74 +8,90 @@
 -->
 
 <dom-module id="pt-select">
-  <template>
-    <style>
-     :host {
-      padding: 4px;
-      min-width: 80px;
-    }
+	<template>
+		<style>
+			:host {
+				margin: 12px;
+				padding: 4px;
+				min-width: 80px;
+				overflow: hidden;
+			}
 
-    select {
-      color: var(--pt-accent-color);
-      background-color: transparent;
+			select {
+				color: var(--pt-accent-color);
+				background-color: transparent;
 
-      border: none;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+				border: none;
+				border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 
-      font-size: 16px;
-      text-transform: capitalize;
-      cursor: pointer;
-			@apply(--pt-select-style);
-    }
+				font-size: 16px;
+				text-transform: capitalize;
+				cursor: pointer;
 
-		label{
-			display: block;
-		}
+				@apply(--pt-select-style);
+			}
 
-    :host([value='']) select {
-      color: var(--pt-primary-text-color,#000);
-    }
+			label {
+				display: block;
+			}
 
-    select.invalid {
-      border-bottom: 1px solid #F44336;
-    }
+			#message {
+				display: none;
+				visibility: hidden;
+			}
 
-    select:focus {
-      outline: none;
-    }
-    </style>
-    <label for="select">[[label]]</label>
-    <select value="[[value]]" on-change="_valueSelected" name="[[name]]">
+			:host([value='']) select, :host(:not([value])) select {
+				color: var(--pt-primary-text-color, lightslategray);
+			}
+
+			:host([invalid]) select {
+				color: #F44336;
+				border-bottom: 1px solid #F44336;
+			}
+
+			:host([invalid]) #message {
+				display: block;
+				visibility: visible;
+			}
+
+			select:focus {
+				outline: none;
+			}
+		</style>
+
+		<label for="select">[[label]]</label>
+		<select id="select" name="[[name]]" value="[[value]]" on-change="_valueSelected" required="[[required]]">
 			<template is="dom-repeat" items="[[_mapItems(options, pathToValue, pathToLabel)]]">
 				<option value="[[item.uid]]">[[item.name]]</option>
-      </template>
-    </select>
-    
-  </template>
+			</template>
+		</select>
 
-  <script>
-    /**
-     * `pt-select`
-     * Select Polymer Element
-     *
-     * @customElement
-     * @polymer
-     * @demo demo/index.html
-     */
-    class PtSelect extends Polymer.Element {
-      static get is() { return 'pt-select'; }
-      
-      static get properties(){
+		<span id="message">[[errorMessage]]</span>
+	</template>
+
+	<script>
+	  /**
+	   * `pt-select`
+	   * Select Polymer Element
+	   *
+	   * @customElement
+	   * @polymer
+	   * @demo demo/index.html
+	   */
+	  class PtSelect extends Polymer.mixinBehaviors([Polymer.IronFormElementBehavior, Polymer.IronValidatableBehavior], Polymer.Element) {
+		static get is(){
+		  return 'pt-select';
+		}
+
+		static get properties(){
 		  return {
 			options: Array,
-			label:String,
-			name:String,
+			label: String,
 			value: {
-			  type: String,
-			  notify: true,
-			  reflectToAttribute: true,
-			  value: ''
+			  value: '',
+			  reflectToAttribute: true
 			},
+
 			option: {
 			  type: Object,
 			  notify: true,
@@ -94,8 +112,8 @@
 			}
 		  };
 		}
-    
-    _placeholderChanged(placeholder){
+
+		_placeholderChanged(placeholder){
 		  let element = this.shadowRoot.querySelector('.placeholder');
 
 		  if (placeholder) {
@@ -156,8 +174,15 @@
 		  return value;
 		}
 
-    }
+		get _validator(){
+		  return {
+			validate: (value) =>{
+			  return !this.required || (value && value !== '');
+			}
+		  }
+		}
+	  }
 
-    window.customElements.define(PtSelect.is, PtSelect);
-  </script>
+	  window.customElements.define(PtSelect.is, PtSelect);
+	</script>
 </dom-module>
