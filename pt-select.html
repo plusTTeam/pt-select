@@ -135,7 +135,7 @@
 		_valueSelected(e){
 		  this.set('value', e.target.value);
 		  this.set('option', this._options[this.value].option);
-		  this.dispatchEvent(new CustomEvent('option-changed', {
+		  this.dispatchEvent(new CustomEvent('pt-option-changed', {
 			detail: {
 			  value: this.value,
 			  option: this.option
